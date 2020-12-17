@@ -33,7 +33,7 @@ mv modules/addons/sampleaddon/ modules/servers/yourservername/
 ```
 Open the DBCLass.php file from `modules/{ModuleType}/{ModuleName}/lib/` folder.
 
-Rename line no. 7 `namespace WHMCS\Module\Addons\SampleAddon;` with `namespace WHMCS\Module\{ModuleType}\{ModuleName};`
+Rename line no. 24 `namespace WHMCS\Module\Addons\SampleAddon;` with `namespace WHMCS\Module\{ModuleType}\{ModuleName};`
 
 After that, move the modules to your WHMCS modules.
 ```
@@ -48,7 +48,13 @@ use WHMCS\Module\{ModuleType}\{ModuleName}\DBClass;
 
 ## Usage
 
-1. To create a single table
+1. To check the existence of the table
+
+```python
+DBClass::hasTable($tableName);
+```
+
+2. To create a single table; `users` is the name of the table and the key act as column name and the value act as the datatype for the column.
 
 ```python
 $table = [
@@ -61,10 +67,10 @@ $table = [
     ]
 ];
 
-DBClass::createSchema($schema);
+DBClass::createTables($table);
 ```
 
-2. To create multiple tables
+3. To create multiple tables
 
 ```python
 $tables = [
@@ -86,11 +92,26 @@ $tables = [
     ]
 ];
 
-DBClass::createSchema($schema);
+DBClass::createTables($tables);
 ```
-3. To insert values in table
+
+4. To drop a single table
 
 ```python
+DBClass::dropTable($tableName);
+```
+
+5. To drop multiple tables
+
+```python
+$tables = ['firstTable', 'secondTable'];
+DBClass::dropTable($tables);
+```
+
+6. To insert a single record in a table
+
+```python
+$tableName = 'users';
 $values = [
     'name'      =>  'John Doe',
     'email'     =>  'johndoe@example.com',
@@ -98,25 +119,102 @@ $values = [
     'phone'     =>  '1234567890'
 ];
 
-DBClass::insertData('users', $values);
+DBClass::insertRecord($tableName, $values);
 ```
-4. To retrieve all data
+
+7. To insert multiple records in a table
+
+```python
+$tableName = 'users';
+$values = [
+    [
+        'name'      =>  'John Doe',
+        'email'     =>  'johndoe@example.com',
+        'password'  =>  md5('123456'),
+        'phone'     =>  '1234567890'
+    ],
+    [
+        'name'      =>  'Shane Watson',
+        'email'     =>  'shanewatson@example.com',
+        'password'  =>  md5('secret'),
+        'phone'     =>  '9876543210'
+    ]
+];
+
+DBClass::insertRecord($tableName, $values);
+```
+
+8. To insert a single record and get the inserted id of the table
+
+```python
+$tableName = 'users';
+$values = [
+    'name'      =>  'John Doe',
+    'email'     =>  'johndoe@example.com',
+    'password'  =>  md5('123456'),
+    'phone'     =>  '1234567890'
+];
+
+DBClass::insertGetId($tableName, $values);
+```
+
+9. To update all records with same value
+
+```python
+$tableName = 'users';
+$values = [
+    'name'      =>  'John Doe',
+    'email'     =>  'johndoe@example.com',
+    'password'  =>  md5('123456'),
+    'phone'     =>  '1234567890'
+];
+
+DBClass::updateRecord($tableName, $values);
+```
+
+10. To update the particular records
+
+```python
+$tableName = 'users';
+$values = [
+    'name'      =>  'John Doe',
+    'email'     =>  'johndoe@example.com',
+    'password'  =>  md5('secret'),
+    'phone'     =>  '9876543218'
+];
+$where = [
+    ['name', 'like', '%J%'],
+    ['phone', '=', '1235467890']
+];
+
+DBClass::updateRecord($tableName, $values, $where);
+```
+
+11. To delete all records
+
+```python
+DBClass::deleteRecord($tableName);
+```
+
+12. To delete the particular records
+
+```python
+$tableName = 'users';
+$where = [
+    ['name', 'like', '%J%'],
+    ['phone', '=', '1235467890']
+];
+
+DBClass::deleteRecord($tableName, $where);
+```
+
+13. To retrieve all data
 
 ```python
 DBClass::getResult('users');
 ```
 
-5. To retrieve one row with where clause
-
-```python
-$where = [
-    ['id', '=', 10]
-];
-
-$result = DBClass::getRow('users', $where);
-```
-
-6. To retrieve multiple rows with multiple where clause
+14. To retrieve multiple rows with multiple where clause
 
 ```python
 $where = [
@@ -127,20 +225,14 @@ $where = [
 $result = DBClass::getResult('users', $where);
 ```
 
-7. To update table
+15. To retrieve one row with where clause
 
 ```python
 $where = [
-    ['userid', '=', 10],
-    ['roleid', '=', 2]
+    ['id', '=', 10]
 ];
 
-$values = [
-    'roleid' => 3,
-    'userid' => 5
-];
-
-$result = DBClass::updateData('roleusers', $values, $where);
+$result = DBClass::getRow('users', $where);
 ```
 
 ## Note
