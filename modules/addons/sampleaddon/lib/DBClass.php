@@ -21,7 +21,7 @@
  * Example: namespace WHMCS\Module\Addons\SampleAddon; to namespace WHMCS\Module\{ModuleType}\{ModuleName};
 */
 
-namespace WHMCS\Module\Addons\SampleAddon;
+namespace WHMCS\Module\Addon\SampleAddon;
 
 use WHMCS\Database\Capsule;
 
