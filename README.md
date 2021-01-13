@@ -25,15 +25,15 @@ Rename the module directory to your desired module name:
 
 ```
 #for addons module try this
-mv modules/addons/sampleaddon/ modules/addons/youraddonname/
+mv modules/addons/sampleaddon/ modules/addon/youraddonname/
 #for registrars module try this
-mv modules/addons/sampleaddon/ modules/registrars/yourregistrarname/
+mv modules/addons/sampleaddon/ modules/registrar/yourregistrarname/
 #for servers module try this
-mv modules/addons/sampleaddon/ modules/servers/yourservername/
+mv modules/addons/sampleaddon/ modules/server/yourservername/
 ```
 Open the DBCLass.php file from `modules/{ModuleType}/{ModuleName}/lib/` folder.
 
-Rename line no. 24 `namespace WHMCS\Module\Addons\SampleAddon;` with `namespace WHMCS\Module\{ModuleType}\{ModuleName};`
+Rename line no. 24 `namespace WHMCS\Module\Addon\SampleAddon;` with `namespace WHMCS\Module\{ModuleType}\{ModuleName};`
 
 After that, move the modules to your WHMCS modules.
 ```
