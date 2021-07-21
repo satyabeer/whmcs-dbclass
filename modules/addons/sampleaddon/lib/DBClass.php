@@ -42,6 +42,7 @@ final class DBClass
      *
      * @return void
      */
+
     public static function createTables($tables)
     {
         try {
@@ -51,7 +52,25 @@ final class DBClass
                     // create table structure
                     Capsule::schema()->create($table, function ($t) use($structure) {
                         foreach($structure as $column => $type) {
-                            $t->$type($column);
+
+                            $types = explode(",",$type);
+                            $dataType = $types[0];
+
+                            if (count($types) > 1) {
+                                if ($types[1] == 'nullable') {
+                                    (count($types) === 5) ? $t->$dataType($column)->nullable($types[2])->default(null) : $t->$dataType($column)->nullable($types[2]);
+                                } elseif($types[1] == 'currenttimestamp') {
+                                    $t->$dataType($column)->default(Capsule::raw("CURRENT_TIMESTAMP"));
+                                } elseif($types[1] == 'onupdatecurrenttimestamp') {
+                                    $t->$dataType($column)->default(Capsule::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
+                                } elseif (count($types) == 3) {
+                                    $enumValues = explode("|", $types[1]);
+                                    $defaultValue = str_replace('default:', '',$types[2]);
+                                    $t->$dataType($column, $enumValues)->default($defaultValue);
+                                }
+                            } else {
+                                $t->$dataType($column);
+                            }
                         }
                     });
                 }
@@ -151,9 +170,13 @@ final class DBClass
      *
      * @return object
      */
-    public static function getRow($table, $where)
+    public static function getRow($table, $where, $column = null, $order = null)
     {
         try {
+            if (!empty($column) && !empty($order) && in_array($order, ['ASC', 'asc', 'DESC', 'desc'])) {
+                return Capsule::table($table)->where($where)->orderBy($column, $order)->first();
+            }
+
             return Capsule::table($table)->where($where)->first();
         } catch (Exception $ex) {
             logActivity("Can not get data from {$table}, error: {$ex->getMessage()}");
@@ -165,13 +188,25 @@ final class DBClass
      *
      * @return object
      */
-    public static function getResult($table, $where = null)
+    public static function getResult($table, $where = null, $column = null, $order = null)
     {
         try {
-            if (is_null($where))
+            if (is_null($where)) {
+
+                if (!empty($column) && !empty($order) && in_array($order, ['ASC', 'asc', 'DESC', 'desc'])) {
+                    return Capsule::table($table)->orderBy($column, $order)->get();
+                }
+
                 return Capsule::table($table)->get();
-            else
+            }
+            else {
+
+                if (!empty($column) && !empty($order) && in_array($order, ['ASC', 'asc', 'DESC', 'desc'])) {
+                    return Capsule::table($table)->where($where)->orderBy($column, $order)->get();
+                }
+
                 return Capsule::table($table)->where($where)->get();
+            }
         } catch (Exception $ex) {
             logActivity("Can not get data from {$table}, error: {$ex->getMessage()}");
         }
