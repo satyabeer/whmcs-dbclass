@@ -32,7 +32,7 @@ final class DBClass
      *
      * @return boolean
      */
-    public static function hasTable($table)
+    public static function hasTable(string $table)
     {
         return Capsule::schema()->hasTable($table);
     }
@@ -43,7 +43,7 @@ final class DBClass
      * @return void
      */
 
-    public static function createTables($tables)
+    public static function createTables(array $tables)
     {
         try {
             foreach($tables as $table => $structure) {
@@ -85,7 +85,7 @@ final class DBClass
      *
      * @return void
      */
-    public static function dropTable($tables)
+    public static function dropTable(mixed $tables)
     {
         try {
             if (is_array($tables)) {
@@ -107,7 +107,7 @@ final class DBClass
      *
      * @return boolean
      */
-    public static function insertRecord($table, $data)
+    public static function insertRecord(string $table, array $data)
     {
         try {
            return Capsule::table($table)->insert($data);
@@ -121,7 +121,7 @@ final class DBClass
      *
      * @return int
      */
-    public static function insertGetId($table, $data)
+    public static function insertGetId(string $table, array $data)
     {
         try {
            return Capsule::table($table)->insertGetId($data);
@@ -136,7 +136,7 @@ final class DBClass
      *
      * @return int
      */
-    public static function updateRecord($table, $data, $where = null)
+    public static function updateRecord(string $table, array $data, array $where = null)
     {
         try {
             if (is_null($where))
@@ -153,7 +153,7 @@ final class DBClass
      *
      * @return int
      */
-    public function deleteRecord($table, $where = null)
+    public function deleteRecord(string $table, array $where = null)
     {
         try {
             if (is_null($where))
@@ -170,7 +170,7 @@ final class DBClass
      *
      * @return object
      */
-    public static function getRow($table, $where, $column = null, $order = null)
+    public static function getRow(string $table, array $where, string $column = null, string $order = null)
     {
         try {
             if (!empty($column) && !empty($order) && in_array($order, ['ASC', 'asc', 'DESC', 'desc'])) {
@@ -188,7 +188,7 @@ final class DBClass
      *
      * @return object
      */
-    public static function getResult($table, $where = null, $column = null, $order = null)
+    public static function getResult(string $table, array $where = null, string $column = null, string $order = null)
     {
         try {
             if (is_null($where)) {
