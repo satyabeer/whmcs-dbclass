@@ -95,20 +95,42 @@ $tables = [
 DBClass::createTables($tables);
 ```
 
-4. To drop a single table
+4. To create tables with default values
+
+```python
+$tables = [
+    'users' => [
+        'id'            =>  'increments',
+        'name'          =>  'string',
+        'email'         =>  'string',
+        'password'      =>  'string',
+        'address1'      =>  'string',
+        'address2'      =>  'string,nullable,true',
+        'phone'         =>  'bigInteger',
+        'status'        =>  'enum,Active|Inactive,default:Inactive',
+        'created_at'    =>  'timestamp,currenttimestamp',
+        'updated_at'    =>  'timestamp,onupdatecurrenttimestamp',
+    ]
+];
+
+DBClass::createTables($tables);
+```
+
+
+5. To drop a single table
 
 ```python
 DBClass::dropTable($tableName);
 ```
 
-5. To drop multiple tables
+6. To drop multiple tables
 
 ```python
 $tables = ['firstTable', 'secondTable'];
 DBClass::dropTable($tables);
 ```
 
-6. To insert a single record in a table
+7. To insert a single record in a table
 
 ```python
 $tableName = 'users';
@@ -122,7 +144,7 @@ $values = [
 DBClass::insertRecord($tableName, $values);
 ```
 
-7. To insert multiple records in a table
+8. To insert multiple records in a table
 
 ```python
 $tableName = 'users';
@@ -144,7 +166,7 @@ $values = [
 DBClass::insertRecord($tableName, $values);
 ```
 
-8. To insert a single record and get the inserted id of the table
+9. To insert a single record and get the inserted id of the table
 
 ```python
 $tableName = 'users';
@@ -158,7 +180,7 @@ $values = [
 DBClass::insertGetId($tableName, $values);
 ```
 
-9. To update all records with same value
+10. To update all records with same value
 
 ```python
 $tableName = 'users';
@@ -172,7 +194,7 @@ $values = [
 DBClass::updateRecord($tableName, $values);
 ```
 
-10. To update the particular records
+11. To update the particular records
 
 ```python
 $tableName = 'users';
@@ -190,13 +212,13 @@ $where = [
 DBClass::updateRecord($tableName, $values, $where);
 ```
 
-11. To delete all records
+12. To delete all records
 
 ```python
 DBClass::deleteRecord($tableName);
 ```
 
-12. To delete the particular records
+13. To delete the particular records
 
 ```python
 $tableName = 'users';
@@ -208,13 +230,19 @@ $where = [
 DBClass::deleteRecord($tableName, $where);
 ```
 
-13. To retrieve all data
+14. To retrieve all data
 
 ```python
 DBClass::getResult('users');
 ```
 
-14. To retrieve multiple rows with multiple where clause
+15. To retrieve all data with latest order
+
+```python
+DBClass::getResult('users', null, 'id', 'DESC');
+```
+
+16. To retrieve multiple rows with multiple where clause
 
 ```python
 $where = [
@@ -225,7 +253,18 @@ $where = [
 $result = DBClass::getResult('users', $where);
 ```
 
-15. To retrieve one row with where clause
+17. To retrieve multiple rows with multiple where clause and also with order by clause
+
+```python
+$where = [
+    ['name', 'like', '%J%'],
+    ['phone', '=', '1235467890']
+];
+
+$result = DBClass::getResult('users', $where, 'name', 'DESC');
+```
+
+18. To retrieve one row with where clause
 
 ```python
 $where = [
@@ -233,6 +272,16 @@ $where = [
 ];
 
 $result = DBClass::getRow('users', $where);
+```
+
+19. If we have duplicate records and we want the latest records 
+
+```python
+$where = [
+    ['id', '=', 10]
+];
+
+$result = DBClass::getRow('users', $where, 'id', 'DESC');
 ```
 
 ## Note
